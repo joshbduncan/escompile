@@ -1,0 +1,2 @@
+// file: include2.jsxinc
+alert("code from include2.jsxinc");

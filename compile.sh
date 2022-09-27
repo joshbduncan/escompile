@@ -23,7 +23,7 @@ BASE_DIR=$(dirname $1)
 INCLUDE_PATHS=( "" )
 
 # read through the script line by line
-while IFS= read -r LINE
+while IFS= read -r LINE || [ -n "$LINE" ]
     do
     
         # if `includepath`` statement split the specified paths into an array and add to INCLUDE_PATHS
@@ -56,7 +56,14 @@ while IFS= read -r LINE
 
             # if $FP was a valid path, cat that file out
             if [[ ! -z "$FP" ]]; then
-                cat $FP
+
+                # check to make sure a newline is at the end of the include file
+                if [[ -s $FP && -z "$(tail -c 1 "$1")" ]]; then
+                    cat $FP
+                else
+                    cat $FP; echo
+                fi
+
             else
                 >&2 echo "🚨 Whoops, I couldn't find file: $FILE"
                 exit 1

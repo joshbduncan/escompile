@@ -11,10 +11,10 @@ I could just export to a JSXBIN file but I like for my open source scripts to be
 The script reads through the supplied script looking for any [ExtendScript Preprocessor Directives](https://extendscript.docsforadobe.dev/extendscript-tools-features/preprocessor-directives.html) and replaces them with contents from that file.
 
 ```bash
-./compile.sh sample_jsx_project/src/script.jsx > sample_jsx_project/compiledScript.jsx
+./escompile.sh sample_jsx_project/src/script.jsx > sample_jsx_project/compiledScript.jsx
 ```
 
-⚠️ You may need to make the script executable (`chmod +x compile.sh`) before running the command above.
+⚠️ You may need to make the script executable (`chmod +x escompile.sh`) before running the command above.
 
 ## What can it detect?
 

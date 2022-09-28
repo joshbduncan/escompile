@@ -14,7 +14,7 @@ alert("code from include4.jsxinc");
 // file: include5.jsxinc
 alert("code from include5.jsxinc");
 // file: include6.jsxinc
-alert("code from include6.jsxinc")
+alert("code from include6.jsxinc");
 // file: include7.jsxinc
 alert("code from include7.jsxinc");
 

@@ -1,7 +1,7 @@
 // sample script file
 
 // DATA FROM THE BASE SCRIPT FILE
-alert("code from base script");
+alert("code from base script before imports");
 
 //@includepath "include;another_module"
 //@include "include1.jsxinc"
@@ -18,4 +18,4 @@ if (true) {
 }
 
 // MORE DATA FROM WITHIN THE BASE SCRIPT
-alert("more code from base script");
+alert("more code from base script after imports");

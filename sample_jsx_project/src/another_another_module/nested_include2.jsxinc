@@ -1,0 +1,2 @@
+// file: nested_include2.jsxinc
+alert("code from nested_include2.jsxinc");

@@ -26,6 +26,8 @@ This script tries to process `include` and `includepath` statements just as the 
 
 Inserts the contents of the named file into the output at the location of this statement.
 
+> 🙌 Nested include files starting in v0.3.0!
+
 ```javascript
 #include "../include/lib.jsxinc"
 //@include "../include/file.jsxinc"
@@ -37,7 +39,7 @@ If the file to be included cannot be found, the script throws an error.
 
 One or more paths that the #include statement should use to locate the files to be included. The semicolon (;) separates path names.
 
-If a `#include` file name starts with a slash (/), it is an absolute path name, and the include paths are ignored. Otherwise, the script attempts to find the file by prefixing the file with each path set by the `#includepath` statement.
+If a `#include` file name starts with a slash (/), it is an absolute path name, and the include paths are ignored. Otherwise, the script attempts to find the file in any of the `#includepath` paths previously defined in your script.
 
 ```javascript
 #includepath "include;../include"

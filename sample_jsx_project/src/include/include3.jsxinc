@@ -1,2 +1,6 @@
 // file: include3.jsxinc
 alert("code from include3.jsxinc");
+
+#include "../another_another_module/nested_include2.jsxinc"
+
+alert("more code from include3.jsxinc after import of nested_include2.jsxinc");

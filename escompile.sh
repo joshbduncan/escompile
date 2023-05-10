@@ -10,6 +10,10 @@
 # This script is distributed under the MIT License.
 # See the LICENSE file for details.
 
+set -o errexit
+set -o pipefail
+set -o nounset
+
 VERSION=0.3.0
 
 function show_help {

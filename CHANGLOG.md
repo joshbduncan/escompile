@@ -9,9 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - bash execution protection flags
-    - set -o errexit
-    - set -o pipefail
-    - set -o nounset
+
+### Changed
+
+- processing of arguments
 
 ## [0.3.0] 2023-03-13
 

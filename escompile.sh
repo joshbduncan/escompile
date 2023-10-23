@@ -10,9 +10,10 @@
 # This script is distributed under the MIT License.
 # See the LICENSE file for details.
 
+# set -x
 set -Eeuo pipefail
 
-VERSION="0.3.2"
+VERSION="0.3.3"
 FPATH=""
 
 # set usage options
@@ -92,6 +93,7 @@ DATA=$(<"$FPATH")
 
 # get the base directory of the script file being processed
 BASE_DIR=$(dirname "$FPATH")
+cd "$BASE_DIR"
 
 # set up and array to hold the include paths
 INCLUDE_PATHS=()

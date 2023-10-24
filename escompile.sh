@@ -13,7 +13,7 @@
 # set -x
 set -Eeuo pipefail
 
-VERSION="0.3.3"
+VERSION="0.3.4"
 FPATH=""
 
 # set usage options
@@ -129,8 +129,8 @@ while [[ $DATA =~ (\#|\@)include ]]; do
                 # check in all of the `includepath` paths
                 for INCLUDE_PATH in "${INCLUDE_PATHS[@]}"; do
                     # if file is found at current include path break
-                    if [[ -f "$BASE_DIR/$INCLUDE_PATH/$FPATH" ]]; then
-                        FPATH="$BASE_DIR/$INCLUDE_PATH/$FPATH"
+                    if [[ -f "$INCLUDE_PATH/$FPATH" ]]; then
+                        FPATH="$INCLUDE_PATH/$FPATH"
                         break
                     fi
                 done
@@ -152,7 +152,7 @@ while [[ $DATA =~ (\#|\@)include ]]; do
                 DATA=$(sed "s/$LINE_ESCAPED/$FDATA_ESCAPED/" <<<"$DATA")
 
             else
-                echo >&2 "[error]: '$VAL': No such file."
+                echo >&2 "[error]: '$FPATH': No such file."
                 exit 1
 
             fi

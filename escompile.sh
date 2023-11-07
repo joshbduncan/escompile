@@ -13,7 +13,7 @@
 # set -x
 set -Eeuo pipefail
 
-VERSION="0.3.4"
+VERSION="0.3.5"
 FPATH=""
 
 # set usage options
@@ -101,7 +101,7 @@ INCLUDE_PATHS=()
 while [[ $DATA =~ (\#|\@)include ]]; do
     # keep iterating over any include statements until no more exist
     # this allows support for nested imports (import within imports)
-    while read -r LINE; do
+    while IFS= read -r LINE; do
         # create an escaped version of the line for later substitution
         LINE_ESCAPED=$(printf '%s\n' "$LINE" | sed -e 's/[]\/$*.^[]/\\&/g')
 

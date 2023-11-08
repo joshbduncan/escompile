@@ -13,7 +13,7 @@
 # set -x
 set -Eeuo pipefail
 
-VERSION="0.3.5"
+VERSION="0.3.6"
 FPATH=""
 
 # set usage options
@@ -127,7 +127,7 @@ while [[ $DATA =~ (\#|\@)include ]]; do
             # if an absolute path was not specified look through INCLUDE_PATHS
             if [[ ! -f $FPATH ]]; then
                 # check in all of the `includepath` paths
-                for INCLUDE_PATH in "${INCLUDE_PATHS[@]}"; do
+                for INCLUDE_PATH in "${INCLUDE_PATHS[@]-}"; do
                     # if file is found at current include path break
                     if [[ -f "$INCLUDE_PATH/$FPATH" ]]; then
                         FPATH="$INCLUDE_PATH/$FPATH"

@@ -2,7 +2,7 @@
 
 ## Why?
 
-To keep development of large ExtendScript projects easier to handle I split the projects into multiple files/modules and use [ExtendScript Preprocessor Directives](https://extendscript.docsforadobe.dev/extendscript-tools-features/preprocessor-directives.html) to source those files in a base script. This works great for me but is a pain for users to install....
+To keep the development of large ExtendScript projects easier to handle I split the projects into multiple files/modules and use [ExtendScript Preprocessor Directives](https://extendscript.docsforadobe.dev/extendscript-tools-features/preprocessor-directives.html) to source those files in a base script. This works great for me but is a pain for users to install...
 
 So, to make script installation as easy as possible I needed an automated way to get everything compiled into a single readable '.jsx' script file.
 
@@ -49,3 +49,13 @@ If a `#include` file name starts with a slash (/), it is an absolute path name, 
 ```
 
 Multiple #includepath statements are allowed; the list of paths updates each time an #includepath statement is executed.
+
+## Resources
+
+### Continuous Compilation
+
+When developing ExtendScript scripts, I like to test from a compiled script, but running ExtendScript Compiler over and over gets old fast so I use [Watchman](https://github.com/facebook/watchman). Mostly, I use the  `watchman-make` command along with a project-specific Makefile to compile source code anytime I save a file in the projects source directory.
+
+```
+$ watchman-make -p 'src/**/*.jsx*' -t compile`
+```

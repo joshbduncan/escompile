@@ -13,7 +13,7 @@
 # set -x
 set -Eeuo pipefail
 
-VERSION="0.3.6"
+VERSION="0.4.0"
 FPATH=""
 
 # set usage options
@@ -98,15 +98,16 @@ cd "$BASE_DIR"
 # set up and array to hold the include paths
 INCLUDE_PATHS=()
 
-while [[ $DATA =~ (\#|\@)include ]]; do
+while [[ $DATA =~ (\#|//\@)include ]]; do
     # keep iterating over any include statements until no more exist
     # this allows support for nested imports (import within imports)
+
     while IFS= read -r LINE; do
         # create an escaped version of the line for later substitution
         LINE_ESCAPED=$(printf '%s\n' "$LINE" | sed -e 's/[]\/$*.^[]/\\&/g')
 
         # extract all `includepath` statements and add them to the `INCLUDE_PATHS` array
-        if [[ $LINE =~ (\#|\@)includepath ]]; then
+        if [[ $LINE =~ (\#|//\@)includepath ]]; then
             # extract just the value
             FOLDER=$(sed -n -e 's/^.*includepath[[:blank:]]//p' <<<"$LINE" | tr -d \"\')
             # if includepath had multiple entries split them apart
@@ -139,7 +140,7 @@ while [[ $DATA =~ (\#|\@)include ]]; do
             # if $FPATH was a valid path, cat that file out
             if [[ -f "$FPATH" ]]; then
                 # get the leading whitespace for the include line
-                WS=$(grep -o "^[[:blank:]]*" <<<"$LINE")
+                WS=$(grep -o '^[[:blank:]]*' <<<"$LINE")
 
                 # pad the include file data with matching whitespace (non-blank line)
                 FDATA=$(sed -e "s/^./$WS&/" "$FPATH")
@@ -158,7 +159,7 @@ while [[ $DATA =~ (\#|\@)include ]]; do
             fi
             continue
         fi
-    done < <(grep -E "^.*\#|\@include" <<<"$DATA")
+    done < <(grep -E "^[[:blank:]]*(#|//@)include" <<<"$DATA")
 done
 
 echo "$DATA"

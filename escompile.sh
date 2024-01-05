@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # ExtendScript Compiler
 
-# Copyright 2023 Josh Duncan
+# Copyright 2024 Josh Duncan
 # https://joshbduncan.com
 
 # See README.md for more info
@@ -13,7 +13,7 @@
 # set -x
 set -Eeuo pipefail
 
-VERSION="0.4.0"
+VERSION="0.4.1"
 FPATH=""
 
 # set usage options

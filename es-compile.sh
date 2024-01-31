@@ -13,7 +13,7 @@
 # set -x
 set -Eeuo pipefail
 
-VERSION="0.4.1"
+VERSION="0.4.2"
 FPATH=""
 
 # set usage options

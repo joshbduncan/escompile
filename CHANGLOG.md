@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] 2024-01-31
+
+### Changed
+
+- project renamed to es-compile, script renamed to es-compile.sh
+
+## [0.4.1] 2024-01-05
+
+### Changed
+
+- updated shebang
+- updated copyright date
+
+## [0.4.0] 2023-12-27
+
+### Fixed
+
+- better regex matching for include statements
+
 ## [0.3.6] 2023-11-08
 
 ### Fixed
@@ -73,11 +92,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- script renames to escompile.sh
+- script renamed to escompile.sh
 
 ### Fixed
 
-- Script now works with files that have an incomplete last line ([Lost string · Issue #1](https://github.com/joshbduncan/extendscript-compiler/issues/1))
+- Script now works with files that have an incomplete last line ([Lost string · Issue #1](https://github.com/joshbduncan/es-compile/issues/1))
 
 ## [0.1.0] - 2022-09-26
 

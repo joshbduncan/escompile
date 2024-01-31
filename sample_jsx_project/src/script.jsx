@@ -14,7 +14,7 @@ alert("code from base script before imports");
 if (true) {
   #includepath '../include'
   #include "include6.jsxinc"
-  #include '/Users/jbd/Dropbox/DEV/projects/extend-script-compiler/sample_jsx_project/polyfills/include7.jsxinc'
+  #include '/Users/jbd/Dropbox/DEV/projects/es-compile/sample_jsx_project/polyfills/include7.jsxinc'
 }
 
 // MORE DATA FROM WITHIN THE BASE SCRIPT

@@ -13,7 +13,7 @@ So, to make script installation as easy as possible I needed an automated way to
 The script reads through the supplied .jsx script file looking for any 'include' statements and replaces them with contents from that file.
 
 ```bash
-./escompile.sh sample_jsx_project/src/script.jsx > sample_jsx_project/compiledScript.jsx
+./es-compile.sh sample_jsx_project/src/script.jsx > sample_jsx_project/compiledScript.jsx
 ```
 
 ⚠️ You may need to make the script executable before running the command above.
@@ -49,6 +49,23 @@ If a `#include` file name starts with a slash (/), it is an absolute path name, 
 ```
 
 Multiple #includepath statements are allowed; the list of paths updates each time an #includepath statement is executed.
+
+## Help
+
+```
+$ ./es-compile.sh -h
+usage: es-compile.sh [-h] [--version] [FILE]
+
+Compile modular ExtendScripts into a single human readable JSX file.
+
+Arguments:
+  [FILE]         Path of script file to compile from.
+
+Options:
+  -h, --help     Print this help message.
+      --version  Print version.
+
+```
 
 ## Resources
 

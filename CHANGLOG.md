@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- project renamed to es-compile, script renamed to es-compile.sh
+- project renamed to escompile, script renamed to escompile.sh
 
 ## [0.4.1] 2024-01-05
 
@@ -96,7 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Script now works with files that have an incomplete last line ([Lost string · Issue #1](https://github.com/joshbduncan/es-compile/issues/1))
+- Script now works with files that have an incomplete last line ([Lost string · Issue #1](https://github.com/joshbduncan/escompile/issues/1))
 
 ## [0.1.0] - 2022-09-26
 

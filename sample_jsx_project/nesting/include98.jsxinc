@@ -1,0 +1,6 @@
+// file: include98.jsxinc
+alert("code from include98.jsxinc");
+
+if (true) {
+  //@include "include99.jsxinc"
+}

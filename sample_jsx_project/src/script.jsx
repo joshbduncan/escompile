@@ -17,5 +17,16 @@ if (true) {
   #include '/Users/jbd/Dropbox/DEV/projects/escompile/sample_jsx_project/polyfills/include7.jsxinc'
 }
 
+// testing nested relative includes
+if (true) {
+  if (true) {
+    if (true) {
+      if (true) {
+        //@include "../nesting/include98.jsxinc"
+      }
+    }
+  }
+}
+
 // MORE DATA FROM WITHIN THE BASE SCRIPT
 alert("more code from base script after imports");

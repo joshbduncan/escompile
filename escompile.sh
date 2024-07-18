@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# ExtendScript Compiler
+# ExtendScript Compiler - Compile modular ExtendScripts into a single human readable JSX file.
 
 # Copyright 2024 Josh Duncan
 # https://joshbduncan.com
@@ -13,19 +13,19 @@
 # set -x
 set -Eeuo pipefail
 
-VERSION="0.4.2"
-FPATH=""
+script_version="0.5.0"
+source_path=""
 
 # set usage options
-USAGE_OPTS="[-h] [--version] [FILE]"
+usage_opts="[-h] [--version] [FILE]"
 usage() {
-    printf "usage: %s %s\n" "${0##*/}" "$USAGE_OPTS" >&2
+    printf "usage: %s %s\n" "${0##*/}" "$usage_opts" >&2
 }
 
 # set help menu
 help() {
     cat <<EOF
-usage: ${0##*/} $USAGE_OPTS
+usage: ${0##*/} $usage_opts
 
 Compile modular ExtendScripts into a single human readable JSX file.
 
@@ -40,35 +40,25 @@ EOF
 }
 
 version() {
-    printf "%s %s\n" "${0##*/}" "$VERSION"
+    printf "%s %s\n" "${0##*/}" "$script_version"
 }
 
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case $1 in
-        -h | -\? | --help)
-            help
-            ;;
-        --version)
-            version
-            exit
-            ;;
-        --) # End of args.
+        -h | -\? | --help) help ;;
+        --version) version exit ;;
+        --)
             shift
             break
-            ;;
+            ;; # end of args.
         -?*)
             usage
             printf "%s: error: unrecognized arguments: %s\n" "${0##*/}" "$1" >&2
             exit 2
             ;;
         *)
-            # check to make sure provided file exists
-            if [[ ! -f "$1" ]]; then
-                printf "%s: error: No such file: '%s'\n" "${0##*/}" "$1" >&2
-                exit 1
-            fi
-            FPATH="$1"
+            source_path="$1"
             break
             ;;
         esac
@@ -76,7 +66,7 @@ parse_args() {
     done
 
     # check to make sure a file was provided
-    if [ -z "$FPATH" ]; then
+    if [ -z "$source_path" ]; then
         usage
         printf "%s: error: the following arguments are required: file\n" "${0##*/}" >&2
         exit 1
@@ -85,81 +75,97 @@ parse_args() {
     return 0
 }
 
+is_in_array() {
+    local value="$1"
+    local array=("${@:2}")
+
+    for item in "${array[@]}"; do
+        if [[ "$item" == "$value" ]]; then
+            return 0 # found
+        fi
+    done
+
+    return 1 # not found
+}
+
+get_abs_filename() {
+    echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+}
+
+process_include() {
+    # extract the function arguments
+    local file="$1"
+    local pad="${2:-0}"
+
+    # check if file exists
+    if [[ ! -f "$file" ]]; then
+        printf "%s: error: No such file: '%s'\n" "${0##*/}" "$file" >&2
+        exit 1
+    fi
+
+    # track all seen paths to avoid double imports
+    local full_path
+    full_path=$(get_abs_filename "$file")
+    if [[ ${#INCLUDE_PATHS[@]} -gt 0 ]] && is_in_array "$full_path" "${IMPORTED_PATHS[@]}"; then
+        printf "%s: warning: File already imported: '%s'\n" "${0##*/}" "$file" >&2
+        return
+    else
+        IMPORTED_PATHS+=("$full_path")
+    fi
+
+    # get the base dir of the file
+    local base_dir
+    base_dir=$(dirname "$file")
+
+    # build proper padding for current line
+    local padding
+    padding=$(printf "%*s" "$pad" "")
+
+    # iterate over every line of the file and either process import/includepath statementes, or echo the line
+    local arr
+    local escaped
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # get the leading whitespace for the include line
+        local trimmed="${line#"${line%%[![:space:]]*}"}"
+        local _pad=$((${#line} - ${#trimmed} + pad))
+
+        if [[ "$line" =~ ^[[:blank:]]*(//@|#)includepath[[:space:]]*(\"|\')(.*)(\"|\') ]]; then
+            # read path(s) into array split on ';' incase multiple paths were provided
+            IFS=";" read -r -a arr <<<"${BASH_REMATCH[3]}"
+            INCLUDE_PATHS+=("${arr[@]}")
+        elif [[ "$line" =~ ^[[:blank:]]*(//@|#)include[[:space:]]*(\"|\')(.*)(\"|\') ]]; then
+            local fp="${BASH_REMATCH[3]}"
+
+            # look for file in includepaths if path is relative
+            if [[ ! -f "$fp" ]]; then
+                if [[ -f "$base_dir/$fp" ]]; then
+                    fp="$base_dir/$fp"
+                else
+                    for i in "${INCLUDE_PATHS[@]}"; do
+                        if [[ -f "$base_dir/$i/$fp" ]]; then
+                            fp="$base_dir/$i/$fp"
+                            break
+                        fi
+                    done
+                fi
+            fi
+
+            process_include "$fp" "$_pad"
+        else
+            escaped=$(printf '%s\n' "$line")
+            echo "${padding}${escaped}"
+        fi
+    done <"$file"
+}
+
 # parse script arguments
 parse_args "$@"
 
-# read file into variable
-DATA=$(<"$FPATH")
-
-# get the base directory of the script file being processed
-BASE_DIR=$(dirname "$FPATH")
-cd "$BASE_DIR"
-
-# set up and array to hold the include paths
+# setup array to hold includepaths
 INCLUDE_PATHS=()
 
-while [[ $DATA =~ (\#|//\@)include ]]; do
-    # keep iterating over any include statements until no more exist
-    # this allows support for nested imports (import within imports)
+# setup array to hold import paths
+IMPORTED_PATHS=()
 
-    while IFS= read -r LINE; do
-        # create an escaped version of the line for later substitution
-        LINE_ESCAPED=$(printf '%s\n' "$LINE" | sed -e 's/[]\/$*.^[]/\\&/g')
-
-        # extract all `includepath` statements and add them to the `INCLUDE_PATHS` array
-        if [[ $LINE =~ (\#|//\@)includepath ]]; then
-            # extract just the value
-            FOLDER=$(sed -n -e 's/^.*includepath[[:blank:]]//p' <<<"$LINE" | tr -d \"\')
-            # if includepath had multiple entries split them apart
-            if [[ $FOLDER =~ ";" ]]; then
-                IFS=";" read -r -a FOLDERS <<<"$FOLDER"
-                INCLUDE_PATHS+=("${FOLDERS[@]}")
-            else
-                INCLUDE_PATHS+=("$FOLDER")
-            fi
-            # delete the include statement from `$DATA`
-            DATA=$(grep -v "$LINE_ESCAPED" <<<"$DATA")
-        else
-            # substitute include file data into main script
-
-            # extract just the path value
-            FPATH=$(sed -n -e 's/^.*include[[:blank:]]//p' <<<"$LINE" | tr -d \"\')
-
-            # if an absolute path was not specified look through INCLUDE_PATHS
-            if [[ ! -f $FPATH ]]; then
-                # check in all of the `includepath` paths
-                for INCLUDE_PATH in "${INCLUDE_PATHS[@]-}"; do
-                    # if file is found at current include path break
-                    if [[ -f "$INCLUDE_PATH/$FPATH" ]]; then
-                        FPATH="$INCLUDE_PATH/$FPATH"
-                        break
-                    fi
-                done
-            fi
-
-            # if $FPATH was a valid path, cat that file out
-            if [[ -f "$FPATH" ]]; then
-                # get the leading whitespace for the include line
-                WS=$(grep -o '^[[:blank:]]*' <<<"$LINE")
-
-                # pad the include file data with matching whitespace (non-blank line)
-                FDATA=$(sed -e "s/^./$WS&/" "$FPATH")
-
-                # escape the include file data and substitute it for the statement
-                FDATA_ESCAPED=$(printf '%s\n' "$FDATA" | sed 's,[\/&],\\&,g;s/$/\\/')
-                FDATA_ESCAPED=${FDATA_ESCAPED%?}
-
-                # shellcheck disable=SC2001
-                DATA=$(sed "s/$LINE_ESCAPED/$FDATA_ESCAPED/" <<<"$DATA")
-
-            else
-                echo >&2 "[error]: '$FPATH': No such file."
-                exit 1
-
-            fi
-            continue
-        fi
-    done < <(grep -E "^[[:blank:]]*(#|//@)include" <<<"$DATA")
-done
-
-echo "$DATA"
+# process the source file
+process_include "$source_path"

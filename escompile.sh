@@ -117,6 +117,17 @@ process_include() {
     local base_dir
     base_dir=$(dirname "$file")
 
+    # get the file name
+    local file_name
+    file_name=$(basename "$file")
+
+    # check for utf-8 bom encoding (https://github.com/joshbduncan/escompile/issues/4)
+    if head -c 3 "$file" | grep -q $'\xEF\xBB\xBF'; then
+        tmpfile=$(mktemp /tmp/"$file_name".XXXXXX)
+        tail -c +4 "$file" >"$tmpfile"
+        file="$tmpfile"
+    fi
+
     # build proper padding for current line
     local padding
     padding=$(printf "%*s" "$pad" "")

@@ -13,7 +13,7 @@
 # set -x
 set -Eeuo pipefail
 
-script_version="0.5.0"
+script_version="0.5.1"
 source_path=""
 
 # set usage options

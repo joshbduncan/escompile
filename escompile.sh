@@ -13,7 +13,7 @@
 # set -x
 set -Eeuo pipefail
 
-script_version="0.5.1"
+script_version="0.5.2"
 source_path=""
 
 # set usage options
@@ -164,7 +164,14 @@ process_include() {
             process_include "$fp" "$_pad"
         else
             escaped=$(printf '%s\n' "$line")
-            echo "${padding}${escaped}"
+
+            # ignore the padding on blank lines
+            if [ -z "$escaped" ]; then
+                echo ""
+            else
+                echo "${padding}${escaped}"
+            fi
+
         fi
     done <"$file"
 }

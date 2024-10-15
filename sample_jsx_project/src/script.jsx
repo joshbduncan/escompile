@@ -28,5 +28,8 @@ if (true) {
   }
 }
 
+// testing duplicate include files (nothing should be on the next line)
+//@include "another_module/nested_include1.jsxinc"
+
 // MORE DATA FROM WITHIN THE BASE SCRIPT
 alert("more code from base script after imports");

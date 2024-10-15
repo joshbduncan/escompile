@@ -19,9 +19,6 @@ alert("code from include3.jsxinc");
 alert("code from nested_include2.jsxinc");
 
 alert("more code from include3.jsxinc after import of nested_include2.jsxinc");
-
-// file: nested_include1.jsxinc
-alert("code from nested_include1.jsxinc");
 // file: include4.jsxinc
 alert("code from include4.jsxinc");
 // file: include5.jsxinc
@@ -53,6 +50,9 @@ if (true) {
     }
   }
 }
+
+// testing duplicate include files (nothing should be on the next line)
+
 
 // MORE DATA FROM WITHIN THE BASE SCRIPT
 alert("more code from base script after imports");

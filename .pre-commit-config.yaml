@@ -10,3 +10,13 @@ repos:
     rev: 3.0.0
     hooks:
       - id: shellcheck
+
+  - repo: local
+    hooks:
+      - id: run-tests
+        name: test
+        entry: bash -c './tests/run_tests.sh'
+        language: system
+        types: [bash]
+        always_run: true
+        verbose: true

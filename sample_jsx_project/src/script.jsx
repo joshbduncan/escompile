@@ -14,7 +14,7 @@ alert("code from base script before imports");
 if (true) {
   #includepath '../include'
   #include "include6.jsxinc"
-  #include '/Users/jbd/Dropbox/DEV/projects/escompile/sample_jsx_project/polyfills/include7.jsxinc'
+  #include '/Users/jbd/Dropbox/Code/escompile/sample_jsx_project/polyfills/include7.jsxinc'
 }
 
 // testing nested relative includes

@@ -5,7 +5,7 @@
 # Adobe Preprocessor Directives Documentation
 # https://extendscript.docsforadobe.dev/extendscript-tools-features/preprocessor-directives.html
 
-# Copyright 2024 Josh Duncan
+# Copyright 2026 Josh Duncan
 # https://joshbduncan.com
 
 # See README.md for more info
@@ -16,7 +16,7 @@
 # set -x
 set -Eeuo pipefail
 
-script_version="0.6.0"
+script_version="0.6.1"
 script_name="${0##*/}"
 source_path=""
 
